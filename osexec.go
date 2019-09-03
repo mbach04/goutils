@@ -4,15 +4,17 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
-	"strings"
 )
 
 func main() {
-	s := "ls -lsah"
+	waitWithCombinedOut("head -c 1G </dev/urandom > tempfile")
+	waitWithCombinedOut("ls -lsah")
 
-	args := strings.Split(s, " ")
+}
 
-	cmd := exec.Command(args[0], args[1:]...)
+func waitWithCombinedOut(s string) {
+
+	cmd := exec.Command("sh", "-c", s)
 
 	b, err := cmd.CombinedOutput() //wait for return
 	if err != nil {
