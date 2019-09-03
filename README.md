@@ -1,0 +1,2 @@
+# goutils
+Useful golang snippets
