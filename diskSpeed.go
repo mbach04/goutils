@@ -19,7 +19,7 @@ func main() {
 	waitWithCombinedOut(cmd)
 	b, err := ioutil.ReadFile(tmpFile)
 	if err != nil {
-		fmt.Println("Error reading file: %v", err)
+		fmt.Println("Error reading file:", err)
 		return
 	}
 	start := time.Now()
@@ -34,7 +34,7 @@ func main() {
 func writeFileNTimes(path string, b *[]byte, n int) {
 	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
 	if err != nil {
-		fmt.Println("Error opening file: %v", err)
+		fmt.Println("Error opening file:", err)
 		return
 	}
 	defer file.Close()
@@ -43,19 +43,18 @@ func writeFileNTimes(path string, b *[]byte, n int) {
 		fmt.Println(i, "of", count)
 		_, err = file.Write(*b)
 		if err != nil {
-			fmt.Println("Error writing to file: %v", err)
+			fmt.Println("Error writing to file:", err)
+			return
+		}
+		// save changes
+		err = file.Sync()
+		if err != nil {
+			fmt.Println("Error syncing file before close:", err)
 			return
 		}
 	}
 
-	// save changes
-	err = file.Sync()
-	if err != nil {
-		fmt.Println("Error syncing file before close: %v", err)
-		return
-	}
-
-	fmt.Sprintln("Finished writing to tmp file: %s", tmpFile)
+	fmt.Println("Finished writing to tmp file:", tmpFile)
 }
 
 func deleteFile(path string) {
